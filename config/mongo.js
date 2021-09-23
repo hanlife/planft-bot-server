@@ -1,6 +1,7 @@
 const mongoose = require('mongoose').set('debug', true);
 
-const url = 'mongodb://planft:planft123456@localhost:27017/planft-bot-serve'
+console.log(process.env.mongo)
+const url = process.env.mongo
 
 module.exports = {
     connect: ()=> {            
