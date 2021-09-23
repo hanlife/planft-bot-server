@@ -1,5 +1,6 @@
 const { Telegraf } = require('telegraf');
 const bot = new Telegraf('1982329197:AAFSjT950PZSp8v_mXqDeLwfz7svVb55b-g');
+const Messages = require('./models/message');
 
 bot.on('message', async ctx => {
   console.log('message', ctx.message);
@@ -21,13 +22,22 @@ bot.on('message', async ctx => {
     });
 
     const res = await ctx.replyWithHTML(
-      `<a href="http://127.0.0.1?groupId=${chat.id}&userId=${
-        new_chat_member.id
+      `<a href="http://127.0.0.1?groupId=${chat.id}&userId=${new_chat_member.id
       }">NFT Authentication</a>`
     );
 
     const message_id = res.message_id;
+    // 机器人消息存入数据库
+    await Messages.create({
+      chatId: chat.id,
+      newChatMemberId: new_chat_member.id,
+      messageId: message_id,
+      createTime: new Date().getTime()
+    })
 
+    setTimeout(() => {
+      checkResult(message_id)
+    }, 30 * 1000)
     // setTimeout(() => {
     //   const checkResult = true;
     //   if (checkResult) {
@@ -51,6 +61,19 @@ bot.on('message', async ctx => {
   }
 });
 
+async function checkResult (message_id) {
+  const message = await Messages.findOne().where({
+    messageId: message_id,
+  })
+  if (message) {
+    // 踢掉该用户
+    console.log('[ ti chu message ] >', message)
+    bot.telegram.kickChatMember(message.chatId, message.newChatMemberId, {
+      until_date: 0
+    });
+  }
+}
+
 bot.launch().then(() => {
   console.info(`Bot ${bot.botInfo.username} is up and running`);
 });
@@ -58,3 +81,5 @@ bot.launch().then(() => {
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
+
+module.exports = bot

@@ -3,6 +3,9 @@ const Users = require('../models/users');
 const Messages = require('../models/message');
 const slimbot = require('../slimbot')
 
+// const bot = require('../telegraf')
+// const slimbot = bot.telegram
+
 router.prefix('/users')
 
 router.post('/verify', async function (ctx, next) {
