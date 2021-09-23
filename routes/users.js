@@ -8,12 +8,6 @@ router.prefix('/users')
 router.post('/verify', async function (ctx, next) {
   let data = ctx.request.body
   const { userId, groupId, contract, tokenId } = data
-  console.log("data", data)
-  if(tokenId === '') {
-    slimbot.kickChatMember(groupId, userId, {
-      until_date: 0,
-    })
-  }
   try {
     const find_res = await Users.find().where({
       groupId, tokenId
@@ -23,14 +17,17 @@ router.post('/verify', async function (ctx, next) {
       await Users.create({
         userId, groupId, contract, tokenId
       })
-      const message = await Messages.findOne().where({
+      const message = await Messages.find().where({
         chatId: groupId,
         newChatMemberId: userId
-      }).sort({createTime: -1})
+      }).sort({createTime: -1}).limit(1)
       console.log('[ message ] >', message.messageId)
       // 删除验证消息
       if(message.messageId){
-        slimbot.deleteMessage(groupId, Number(message.messageId))
+        await slimbot.deleteMessage(groupId, Number(message.messageId))
+        await Messages.deleteOne({
+          messageId: message.messageId
+        })
       }
       slimbot.restrictChatMember(groupId, userId, {
         can_send_messages: true,
@@ -59,10 +56,12 @@ router.post('/verify', async function (ctx, next) {
         chatId: groupId,
         newChatMemberId: userId
       })
-      console.log('[ message.messageId ] >', message.messageId)
       // 删除验证消息
       if(message.messageId){
-        slimbot.deleteMessage(groupId, Number(message.messageId))
+        await slimbot.deleteMessage(groupId, Number(message.messageId))
+        await Messages.deleteOne({
+          messageId: message.messageId
+        })
       }
       
       // 踢掉之前用户

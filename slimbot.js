@@ -3,9 +3,7 @@ const slimbot = new Slimbot('1982329197:AAFSjT950PZSp8v_mXqDeLwfz7svVb55b-g');
 const Messages = require('./models/message');
 
 // Register listeners
-console.log(111)
 slimbot.on('message', async ctx => {
-  console.log(111)
   const new_chat_member = ctx.new_chat_member
   if (new_chat_member && !new_chat_member.is_bot) {
     const chat = ctx.chat;
@@ -35,33 +33,25 @@ slimbot.on('message', async ctx => {
       messageId: message_id,
       createTime: new Date().getTime()
     })
-    // setTimeout(()=>{
-    //   const checkResult = true;
-    //   if(checkResult) {
-    //       console.log('true')
-    //       slimbot.deleteMessage(chat.id, message_id)
-    //       slimbot.restrictChatMember(chat.id, new_chat_member.id, {
-    //           can_send_messages: true,
-    //           can_send_media_messages: true,
-    //           can_send_polls: true,
-    //           can_send_other_messages: true,
-    //           can_add_web_page_previews: true,
-    //           can_change_info: true,
-    //           can_invite_users: true,
-    //           can_pin_messages: true
-    //       },{
-    //           until_date: (new Date().getTime() ) / 1000,
-    //       })
-    //   }else{
-    //       console.log('false')
-    //       slimbot.deleteMessage(chat.id, message_id)
-    //       slimbot.kickChatMember(chat.id, new_chat_member.id,{
-    //           until_date:0,
-    //       })
-    //   }
-    // },  10*1000)
+
+    setTimeout(()=>{
+      checkResult(message_id)
+    }, 30 * 1000)
   }
 });
+
+async function checkResult(message_id) {
+  const message = await Messages.findOne().where({
+    messageId: message_id,
+  })
+  if(message) {
+    // 踢掉该用户
+    console.log('[ ti chu message ] >', message)
+    slimbot.kickChatMember(message.chatId, message.newChatMemberId, {
+      until_date: 0,
+    })
+  }
+}
 
 // Call API
 
