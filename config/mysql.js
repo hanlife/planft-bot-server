@@ -3,11 +3,11 @@ var mysql = require('mysql');
 const config = {
   // 数据库配置
   database: {
-    DATABASE: 'xxx', //数据库名称
-    USERNAME: 'xxx', //mysql用户名
-    PASSWORD: 'xxx', //mysql密码
+    DATABASE: 'planft_bot', //数据库名称
+    USERNAME: 'laifu', //mysql用户名
+    PASSWORD: '714613002', //mysql密码
     PORT: '3306', //mysql端口号
-    HOST: 'xx.xxx.xx.xx' //服务器ip
+    HOST: '127.0.0.1' //服务器ip
   }
 }
 
@@ -36,14 +36,29 @@ let allServices = {
         }
       })
     })
-
   },
-  findUserData: function (name) {
-    let _sql = `select * from users where name="${name}";`
+  findUserData: function (groupId, tokenId) {
+    let _sql = `select * from users where groupId=${groupId} and tokenId=${tokenId};`
     return allServices.query(_sql)
   },
-  addUserData: (obj) => {
-    let _sql = "insert into users set name=?,pass=?,avator=?,moment=?;"
+  findMessageData: (chatId, newChatMemberId) => {
+    let _sql = `select * from messages where chatId=${chatId} and newChatMemberId=${newChatMemberId};`
+    return allServices.query(_sql)
+  },
+  deleteMessageData: (messageId) => {
+    let _sql = `DELETE FROM messages where messageId=${messageId};`
+    return allServices.query(_sql)
+  },
+  createUserData: (obj) => {
+    let _sql = `insert into users set userId=?,groupId=?,contract=?,tokenId=?;`
+    return allServices.query(_sql, obj)
+  },
+  updateUserData: (obj) => {
+    let _sql = `UPDATE users SET userId=? where id=?;`
+    return allServices.query(_sql, obj)
+  },
+  createMessageData: (obj) => {
+    let _sql = `insert into messages set chatId=?,newChatMemberId=?,messageId=?,createTime=?;`
     return allServices.query(_sql, obj)
   },
 }

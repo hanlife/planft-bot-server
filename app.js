@@ -5,13 +5,11 @@ const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 
-require('./slimbot')
-const mongoConf = require('./config/mongo');
-mongoConf.connect();
+// require('./slimbot')
+// const mongoConf = require('./config/mongo');
+// mongoConf.connect();
 
-
-
-
+require('./config/mysql');
 
 const index = require('./routes/index')
 const users = require('./routes/users')
