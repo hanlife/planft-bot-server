@@ -1,0 +1,64 @@
+Arguments: 
+  D:\Program Files\nodejs\node.exe C:\Users\hanlaifu\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add mysql --save
+
+PATH: 
+  C:\Users\hanlaifu\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\hanlaifu\bin;D:\Program Files (x86)\NetSarang\Xftp 6;D:\Program Files (x86)\NetSarang\Xshell 6;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;D:\Program Files\Java\jdk1.8.0_202\bin;D:\Program Files\Java\jdk1.8.0_202\jre\bin;D:\flutter\bin;D:\Android\sdk;D:\Android\sdk\tools;D:\Android\sdk\platform-tools;D:\Program Files\MongoDB\Server\4.2\bin;C:\WINDOWS\System32\OpenSSH;D:\Program Files\apache-maven-3.6.3\bin;D:\Program Files\Redis;C:\Program Files\Git\cmd;C:\Program Files (x86)\Calibre2;C:\ProgramData\chocolatey\bin;D:\Program Files\nodejs;C:\Users\hanlaifu\AppData\Local\Microsoft\WindowsApps;D:\Program Files\Microsoft VS Code\bin;D:\Programs\IPFS Desktop\resources\app.asar.unpacked\src\ipfs-on-path\scripts\bin-win;C:\Users\hanlaifu\AppData\Roaming\npm;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl
+
+Yarn version: 
+  1.22.4
+
+Node version: 
+  16.7.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: https://registry.npmjs.org/debug: tunneling socket could not be established, cause=connect ECONNREFUSED 127.0.0.1:12333
+      at ClientRequest.onError (C:\Users\hanlaifu\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:152234:17)
+      at Object.onceWrapper (node:events:514:26)
+      at ClientRequest.emit (node:events:394:28)
+      at Socket.socketErrorListener (node:_http_client:447:9)
+      at Socket.emit (node:events:394:28)
+      at emitErrorNT (node:internal/streams/destroy:157:8)
+      at emitErrorCloseNT (node:internal/streams/destroy:122:3)
+      at processTicksAndRejections (node:internal/process/task_queues:83:21)
+
+npm manifest: 
+  {
+    "name": "demo",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+      "start": "node bin/www",
+      "dev": "./node_modules/.bin/nodemon bin/www",
+      "prd": "pm2 start bin/www",
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+      "debug": "^4.1.1",
+      "dotenv": "^10.0.0",
+      "koa": "^2.7.0",
+      "koa-bodyparser": "^4.2.1",
+      "koa-convert": "^1.2.0",
+      "koa-json": "^2.0.2",
+      "koa-logger": "^3.2.0",
+      "koa-onerror": "^4.1.0",
+      "koa-router": "^7.4.0",
+      "koa-static": "^5.0.0",
+      "koa-views": "^6.2.0",
+      "mongoose": "^6.0.7",
+      "pug": "^2.0.3",
+      "slimbot": "^5.1.0",
+      "telegraf": "^4.4.2"
+    },
+    "devDependencies": {
+      "nodemon": "^1.19.1"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

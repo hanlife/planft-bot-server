@@ -21,6 +21,7 @@
     "koa-static": "^5.0.0",
     "koa-views": "^6.2.0",
     "mongoose": "^6.0.7",
+    "mysql": "^2.18.1",
     "pug": "^2.0.3",
     "slimbot": "^5.1.0",
     "telegraf": "^4.4.2"
