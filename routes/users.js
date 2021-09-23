@@ -95,7 +95,7 @@ router.post('/verify', async function (ctx, next) {
   }
 })
 
-router.post('/add', async function (ctx) {
+router.post('/addUser', async function (ctx) {
   let data = ctx.request.body
   const { userId, groupId, contract, tokenId } = data
   console.log(data)
