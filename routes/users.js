@@ -101,23 +101,36 @@ router.post('/verify', async function (ctx, next) {
 })
 
 // 验证未通过
-router.post('/verifyFail', async function(ctx) {
-  let data = ctx.request.body
-  const { userId, groupId } = data
-  const message = await Messages.find().where({
-    chatId: groupId,
-    newChatMemberId: userId
-  }).sort({createTime: -1}).limit(1)
-  // 删除验证消息
-  if(message[0].messageId){
-    await telegram.deleteMessage(groupId, Number(message[0].messageId))
-    await Messages.deleteOne({
-      messageId: message[0].messageId
-    })
-    // 踢掉之前用户
-    telegram.kickChatMember(groupId, userId, {
-      until_date: 0
-    });
+router.post('/verifyFail', async function(ctx,next) {
+  try {
+    let data = ctx.request.body
+    const { userId, groupId } = data
+    const message = await Messages.find().where({
+      chatId: groupId,
+      newChatMemberId: userId
+    }).sort({createTime: -1}).limit(1)
+    // 删除验证消息
+    if(message[0].messageId){
+      await telegram.deleteMessage(groupId, Number(message[0].messageId))
+      await Messages.deleteOne({
+        messageId: message[0].messageId
+      })
+      // 踢掉之前用户
+      telegram.kickChatMember(groupId, userId, {
+        until_date: 0
+      });
+    }
+    ctx.body = {
+      code: 0,
+      data: null,
+      message: 'success',
+    }
+  } catch (error) {
+    ctx.body = {
+      code: -1,
+      data: null,
+      message: 'error',
+    }
   }
 
 })
