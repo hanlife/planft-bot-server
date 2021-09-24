@@ -1,10 +1,10 @@
 const router = require('koa-router')()
 const Users = require('../models/users');
 const Messages = require('../models/message');
-const slimbot = require('../slimbot')
+// const slimbot = require('../slimbot')
 
-// const bot = require('../telegraf')
-// const slimbot = bot.telegram
+const telegraf = require('../telegraf')
+const telegram = telegraf.telegram
 
 router.prefix('/users')
 
@@ -27,12 +27,12 @@ router.post('/verify', async function (ctx, next) {
       console.log('[ message ] >', message.messageId)
       // 删除验证消息
       if(message.messageId){
-        await slimbot.deleteMessage(groupId, Number(message.messageId))
+        await telegram.deleteMessage(groupId, Number(message.messageId))
         await Messages.deleteOne({
           messageId: message.messageId
         })
       }
-      slimbot.restrictChatMember(groupId, userId, {
+      telegram.restrictChatMember(groupId, userId, {
         can_send_messages: true,
         can_send_media_messages: true,
         can_send_polls: true,
@@ -41,8 +41,6 @@ router.post('/verify', async function (ctx, next) {
         can_change_info: true,
         can_invite_users: true,
         can_pin_messages: true
-      }, {
-        until_date: (new Date().getTime()) / 1000,
       })
 
       ctx.body = {
@@ -61,19 +59,19 @@ router.post('/verify', async function (ctx, next) {
       })
       // 删除验证消息
       if(message.messageId){
-        await slimbot.deleteMessage(groupId, Number(message.messageId))
+        await telegram.deleteMessage(groupId, Number(message.messageId))
         await Messages.deleteOne({
           messageId: message.messageId
         })
       }
       
       // 踢掉之前用户
-      slimbot.kickChatMember(groupId, find_res[0].userId, {
-        until_date: 0,
-      })
+      telegram.kickChatMember(groupId, find_res[0].userId, {
+        until_date: 0
+      });
 
       // 解禁当前用户
-      slimbot.restrictChatMember(groupId, userId, {
+      telegram.restrictChatMember(groupId, userId, {
         can_send_messages: true,
         can_send_media_messages: true,
         can_send_polls: true,
@@ -82,8 +80,6 @@ router.post('/verify', async function (ctx, next) {
         can_change_info: true,
         can_invite_users: true,
         can_pin_messages: true
-      }, {
-        until_date: (new Date().getTime()) / 1000,
       })
       ctx.body = {
         code: 0,

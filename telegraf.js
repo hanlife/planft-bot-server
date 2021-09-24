@@ -62,9 +62,9 @@ bot.on('message', async ctx => {
 });
 
 async function checkResult (message_id) {
-  const message = await Messages.findOne().where({
+  const message = await Messages.find().where({
     messageId: message_id,
-  })
+  }).sort({createTime: -1}).limit(1)
   if (message) {
     // 踢掉该用户
     console.log('[ ti chu message ] >', message)
