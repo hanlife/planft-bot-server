@@ -1,5 +1,5 @@
 const Slimbot = require('slimbot');
-const bot = new Slimbot('1982329197:AAFSjT950PZSp8v_mXqDeLwfz7svVb55b-g');
+const bot = new Slimbot('2008780620:AAHaqLdchsjovVdwr4MxQyl-J07NmmVRFfg');
 const Messages = require('./models/message');
 
 // Register listeners
@@ -21,7 +21,7 @@ bot.on('message', async ctx => {
       until_date: tomorrow,
     })
 
-    const res_message = await bot.sendMessage(chat.id, `<a href="http://127.0.0.1:3001?groupId=${chat.id}&userId=${new_chat_member.id
+    const res_message = await bot.sendMessage(chat.id, `<a href="http://127.0.0.1:3001/#/verify?groupId=${chat.id}&userId=${new_chat_member.id
       }">NFT Authentication</a>`, {
       parse_mode: 'HTML',
     })

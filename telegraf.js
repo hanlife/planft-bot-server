@@ -1,5 +1,5 @@
 const { Telegraf } = require('telegraf');
-const bot = new Telegraf('1982329197:AAFSjT950PZSp8v_mXqDeLwfz7svVb55b-g');
+const bot = new Telegraf('2008780620:AAHaqLdchsjovVdwr4MxQyl-J07NmmVRFfg');
 const Messages = require('./models/message');
 
 bot.on('message', async ctx => {

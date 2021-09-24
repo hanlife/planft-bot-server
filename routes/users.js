@@ -48,7 +48,7 @@ router.post('/verify', async function (ctx, next) {
       ctx.body = {
         code: 0,
         data: null,
-        message: '验证成功',
+        message: 'verify success',
       }
     } else {
       const id = find_res[0]._id
@@ -88,7 +88,7 @@ router.post('/verify', async function (ctx, next) {
       ctx.body = {
         code: 0,
         data: null,
-        message: '更新成功',
+        message: 'update success',
       }
     }
   } catch (error) {
