@@ -21,7 +21,7 @@ bot.on('message', async ctx => {
       until_date: tomorrow,
     })
 
-    const res_message = await bot.sendMessage(chat.id, `<a href="http://127.0.0.1:3001/#/verify?groupId=${chat.id}&userId=${new_chat_member.id
+    const res_message = await bot.sendMessage(chat.id, `<a href="http://test.planft.com/#/verify?groupId=${chat.id}&userId=${new_chat_member.id
       }">NFT Authentication</a>`, {
       parse_mode: 'HTML',
     })

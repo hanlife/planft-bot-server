@@ -21,7 +21,7 @@ bot.on('message', async ctx => {
     });
 
     const res = await bot.telegram.replyWithHTML(
-      `<a href="http://127.0.0.1?groupId=${chat.id}&userId=${new_chat_member.id
+      `<a href="http://test.planft.com/#/verify?groupId=${chat.id}&userId=${new_chat_member.id
       }">NFT Authentication</a>`
     );
 
