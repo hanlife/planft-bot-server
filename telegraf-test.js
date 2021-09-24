@@ -1,4 +1,4 @@
-const { Telegraf } = require('telegraf');
+const { Telegraf } = require('telegraf')
 const bot = new Telegraf('2008780620:AAHaqLdchsjovVdwr4MxQyl-J07NmmVRFfg');
 
 bot.on('message', async ctx => {
@@ -19,14 +19,11 @@ bot.on('message', async ctx => {
       can_invite_users: false,
       can_pin_messages: false
     });
-
-    const res = await bot.telegram.replyWithHTML(
-      `<a href="http://test.planft.com/#/verify?groupId=${chat.id}&userId=${new_chat_member.id
-      }">NFT Authentication</a>`
-    );
-
+    const res = await bot.telegram.sendMessage(chat.id,
+      `<a href="http://test.planft.com/#/verify?groupId=${chat.id}&userId=${new_chat_member.id}">NFT Authentication</a>`,
+    { parse_mode: 'HTML' })
     const message_id = res.message_id;
-    
+
     setTimeout(() => {
       const checkResult = true;
       if (checkResult) {
