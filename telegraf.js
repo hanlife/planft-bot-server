@@ -65,10 +65,10 @@ async function checkResult (message_id) {
   const message = await Messages.find().where({
     messageId: message_id,
   }).sort({createTime: -1}).limit(1)
-  if (message) {
+  if (message.length>0) {
     // 踢掉该用户
     console.log('[ ti chu message ] >', message)
-    bot.telegram.kickChatMember(message.chatId, message.newChatMemberId, {
+    bot.telegram.kickChatMember(message[0].chatId, message[0].newChatMemberId, {
       until_date: 0
     });
   }

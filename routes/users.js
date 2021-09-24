@@ -24,12 +24,12 @@ router.post('/verify', async function (ctx, next) {
         chatId: groupId,
         newChatMemberId: userId
       }).sort({createTime: -1}).limit(1)
-      console.log('[ message ] >', message.messageId)
+      console.log('[ message ] >', message[0].messageId)
       // 删除验证消息
-      if(message.messageId){
-        await telegram.deleteMessage(groupId, Number(message.messageId))
+      if(message[0].messageId){
+        await telegram.deleteMessage(groupId, Number(message[0].messageId))
         await Messages.deleteOne({
-          messageId: message.messageId
+          messageId: message[0].messageId
         })
       }
       telegram.restrictChatMember(groupId, userId, {
@@ -59,10 +59,10 @@ router.post('/verify', async function (ctx, next) {
         newChatMemberId: userId
       }).sort({createTime: -1}).limit(1)
       // 删除验证消息
-      if(message.messageId){
-        await telegram.deleteMessage(groupId, Number(message.messageId))
+      if(message[0].messageId){
+        await telegram.deleteMessage(groupId, Number(message[0].messageId))
         await Messages.deleteOne({
-          messageId: message.messageId
+          messageId: message[0].messageId
         })
       }
       // 用户不一致
@@ -109,8 +109,8 @@ router.post('/verifyFail', async function(ctx) {
     newChatMemberId: userId
   }).sort({createTime: -1}).limit(1)
   // 删除验证消息
-  if(message.messageId){
-    await telegram.deleteMessage(groupId, Number(message.messageId))
+  if(message[0].messageId){
+    await telegram.deleteMessage(groupId, Number(message[0].messageId))
     await Messages.deleteOne({
       messageId: message.messageId
     })
