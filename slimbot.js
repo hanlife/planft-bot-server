@@ -35,15 +35,16 @@ bot.on('message', async ctx => {
     })
 
     setTimeout(()=>{
-      checkResult(message_id)
+      checkResult(message_id, chat.id)
     }, 30 * 1000)
   }
 });
 
-async function checkResult(message_id) {
-  const message = await Messages.findOne().where({
+async function checkResult(message_id, chatId) {
+  const message = await Messages.find().where({
+    chatId: chatId,
     messageId: message_id,
-  })
+  }).sort({createTime: -1}).limit(1)
   if(message) {
     // 踢掉该用户
     console.log('[ ti chu message ] >', message)
