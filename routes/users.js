@@ -53,6 +53,7 @@ router.post('/verify', async function (ctx, next) {
       await Users.findByIdAndUpdate({ _id: id }, {
         userId
       })
+      
       const message = await Messages.findOne().where({
         chatId: groupId,
         newChatMemberId: userId
@@ -64,11 +65,14 @@ router.post('/verify', async function (ctx, next) {
           messageId: message.messageId
         })
       }
-      
-      // 踢掉之前用户
-      telegram.kickChatMember(groupId, find_res[0].userId, {
-        until_date: 0
-      });
+      // 用户不一致
+      if(find_res[0].userId != userId){
+        await Users.deleteOne({_id: id})
+        // 踢掉之前用户
+        telegram.kickChatMember(groupId, find_res[0].userId, {
+          until_date: 0
+        });
+      }
 
       // 解禁当前用户
       telegram.restrictChatMember(groupId, userId, {
