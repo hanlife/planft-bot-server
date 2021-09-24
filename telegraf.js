@@ -32,7 +32,7 @@ bot.on('message', async ctx => {
       chatId: chat.id,
       newChatMemberId: new_chat_member.id,
       messageId: message_id,
-      createTime: new Date().getTime()
+      createTime: new Date()
     })
 
     setTimeout(() => {
