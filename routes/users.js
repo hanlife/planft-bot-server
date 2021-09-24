@@ -112,7 +112,7 @@ router.post('/verifyFail', async function(ctx) {
   if(message[0].messageId){
     await telegram.deleteMessage(groupId, Number(message[0].messageId))
     await Messages.deleteOne({
-      messageId: message.messageId
+      messageId: message[0].messageId
     })
     // 踢掉之前用户
     telegram.kickChatMember(groupId, userId, {
