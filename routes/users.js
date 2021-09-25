@@ -107,6 +107,7 @@ router.post('/verifyFail', async function(ctx,next) {
       chatId: groupId,
       newChatMemberId: userId
     }).sort({createTime: -1}).limit(1)
+    console.log("message", message)
     // 删除验证消息
     if(message[0].messageId){
       await telegram.deleteMessage(groupId, Number(message[0].messageId))
@@ -124,9 +125,10 @@ router.post('/verifyFail', async function(ctx,next) {
       message: 'success',
     }
   } catch (error) {
+    console.log(error)
     ctx.body = {
       code: -1,
-      data: null,
+      data: error,
       message: 'error',
     }
   }
