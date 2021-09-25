@@ -49,11 +49,6 @@ router.post('/verify', async function (ctx, next) {
         message: 'verify success',
       }
     } else {
-      const id = find_res[0]._id
-      await Users.findByIdAndUpdate({ _id: id }, {
-        userId
-      })
-      
       const message = await Messages.find().where({
         chatId: groupId,
         newChatMemberId: userId
@@ -67,7 +62,10 @@ router.post('/verify', async function (ctx, next) {
       }
       // 用户不一致
       if(find_res[0].userId != userId){
-        await Users.deleteOne({_id: id})
+        const id = find_res[0]._id
+        await Users.findByIdAndUpdate({ _id: id }, {
+          userId
+        })
         // 踢掉之前用户
         telegram.kickChatMember(groupId, find_res[0].userId, {
           until_date: 0
