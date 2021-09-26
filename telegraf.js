@@ -22,7 +22,7 @@ bot.on('message', async ctx => {
     });
 
     const res = await ctx.replyWithHTML(
-      `<a href="http://www.planft.org/#/verify?groupId=${chat.id}&userId=${new_chat_member.id
+      `<a href="${process.env.auth_host}/#/verify?groupId=${chat.id}&userId=${new_chat_member.id
       }">NFT Authentication</a>`
     );
 
