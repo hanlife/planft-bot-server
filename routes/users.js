@@ -1,10 +1,10 @@
 const router = require('koa-router')()
 const Users = require('../models/users');
 const Messages = require('../models/message');
-const slimbot = require('../slimbot')
+// const slimbot = require('../slimbot')
 
-// const bot = require('../telegraf')
-// const slimbot = bot.telegram
+const telegraf = require('../telegraf')
+const telegram = telegraf.telegram
 
 router.prefix('/users')
 
@@ -24,15 +24,15 @@ router.post('/verify', async function (ctx, next) {
         chatId: groupId,
         newChatMemberId: userId
       }).sort({createTime: -1}).limit(1)
-      console.log('[ message ] >', message.messageId)
+      console.log('[ message ] >', message[0].messageId)
       // 删除验证消息
-      if(message.messageId){
-        await slimbot.deleteMessage(groupId, Number(message.messageId))
+      if(message[0].messageId){
+        await telegram.deleteMessage(groupId, Number(message[0].messageId))
         await Messages.deleteOne({
-          messageId: message.messageId
+          messageId: message[0].messageId
         })
       }
-      slimbot.restrictChatMember(groupId, userId, {
+      telegram.restrictChatMember(groupId, userId, {
         can_send_messages: true,
         can_send_media_messages: true,
         can_send_polls: true,
@@ -41,8 +41,6 @@ router.post('/verify', async function (ctx, next) {
         can_change_info: true,
         can_invite_users: true,
         can_pin_messages: true
-      }, {
-        until_date: (new Date().getTime()) / 1000,
       })
 
       ctx.body = {
@@ -51,29 +49,31 @@ router.post('/verify', async function (ctx, next) {
         message: 'verify success',
       }
     } else {
-      const id = find_res[0]._id
-      await Users.findByIdAndUpdate({ _id: id }, {
-        userId
-      })
-      const message = await Messages.findOne().where({
+      const message = await Messages.find().where({
         chatId: groupId,
         newChatMemberId: userId
-      })
+      }).sort({createTime: -1}).limit(1)
       // 删除验证消息
-      if(message.messageId){
-        await slimbot.deleteMessage(groupId, Number(message.messageId))
+      if(message[0].messageId){
+        await telegram.deleteMessage(groupId, Number(message[0].messageId))
         await Messages.deleteOne({
-          messageId: message.messageId
+          messageId: message[0].messageId
         })
       }
-      
-      // 踢掉之前用户
-      slimbot.kickChatMember(groupId, find_res[0].userId, {
-        until_date: 0,
-      })
+      // 用户不一致
+      if(find_res[0].userId != userId){
+        const id = find_res[0]._id
+        await Users.findByIdAndUpdate({ _id: id }, {
+          userId
+        })
+        // 踢掉之前用户
+        telegram.kickChatMember(groupId, find_res[0].userId, {
+          until_date: 0
+        });
+      }
 
       // 解禁当前用户
-      slimbot.restrictChatMember(groupId, userId, {
+      telegram.restrictChatMember(groupId, userId, {
         can_send_messages: true,
         can_send_media_messages: true,
         can_send_polls: true,
@@ -82,8 +82,6 @@ router.post('/verify', async function (ctx, next) {
         can_change_info: true,
         can_invite_users: true,
         can_pin_messages: true
-      }, {
-        until_date: (new Date().getTime()) / 1000,
       })
       ctx.body = {
         code: 0,
@@ -98,6 +96,43 @@ router.post('/verify', async function (ctx, next) {
       message: 'error',
     }
   }
+})
+
+// 验证未通过
+router.post('/verifyFail', async function(ctx,next) {
+  try {
+    let data = ctx.request.body
+    const { userId, groupId } = data
+    const message = await Messages.find().where({
+      chatId: groupId,
+      newChatMemberId: userId
+    }).sort({createTime: -1}).limit(1)
+    console.log("message", message)
+    // 删除验证消息
+    if(message[0].messageId){
+      // 踢掉之前用户
+      telegram.kickChatMember(groupId, userId, {
+        until_date: 0
+      });
+      await telegram.deleteMessage(groupId, Number(message[0].messageId))
+      await Messages.deleteOne({
+        messageId: message[0].messageId
+      })
+    }
+    ctx.body = {
+      code: 0,
+      data: null,
+      message: 'success',
+    }
+  } catch (error) {
+    console.log(error)
+    ctx.body = {
+      code: -1,
+      data: error,
+      message: 'error',
+    }
+  }
+
 })
 
 module.exports = router

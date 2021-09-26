@@ -5,12 +5,10 @@ const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 
-require('./slimbot')
+// require('./slimbot')
+require('./telegraf')
 const mongoConf = require('./config/mongo');
 mongoConf.connect();
-
-
-
 
 
 const index = require('./routes/index')

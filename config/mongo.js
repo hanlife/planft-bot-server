@@ -1,6 +1,5 @@
 const mongoose = require('mongoose').set('debug', true);
 
-console.log(process.env.mongo)
 const url = process.env.mongo
 
 module.exports = {

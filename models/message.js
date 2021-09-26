@@ -9,7 +9,7 @@ const messageSchema = new Schema({
     chatId: { type: String, required: [true,'chatId cannot be empty'] },
     newChatMemberId: { type: String, required: [true,'newChatMemberId cannot be empty'] },
     messageId: { type: String, required: [true,'messageId cannot be empty'] },
-    createTime:  { type: Number, required: [true,'createTime cannot be empty'] },
+    createTime:  { type: Date, required: [true,'createTime cannot be empty'] },
 })
 
 // Model
