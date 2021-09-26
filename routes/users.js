@@ -110,14 +110,14 @@ router.post('/verifyFail', async function(ctx,next) {
     console.log("message", message)
     // 删除验证消息
     if(message[0].messageId){
-      await telegram.deleteMessage(groupId, Number(message[0].messageId))
-      await Messages.deleteOne({
-        messageId: message[0].messageId
-      })
       // 踢掉之前用户
       telegram.kickChatMember(groupId, userId, {
         until_date: 0
       });
+      await telegram.deleteMessage(groupId, Number(message[0].messageId))
+      await Messages.deleteOne({
+        messageId: message[0].messageId
+      })
     }
     ctx.body = {
       code: 0,

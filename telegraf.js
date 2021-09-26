@@ -1,5 +1,5 @@
 const { Telegraf } = require('telegraf');
-const bot = new Telegraf('2008780620:AAHaqLdchsjovVdwr4MxQyl-J07NmmVRFfg');
+const bot = new Telegraf(process.env.bot_token);
 const Messages = require('./models/message');
 
 bot.on('message', async ctx => {
@@ -62,16 +62,20 @@ bot.on('message', async ctx => {
 });
 
 async function checkResult (message_id) {
-  const message = await Messages.find().where({
-    messageId: message_id,
-  }).sort({createTime: -1}).limit(1)
-  if (message.length>0) {
-    // 踢掉该用户
-    console.log('[ ti chu message ] >', message)
-    bot.telegram.deleteMessage(message[0].chatId, message_id)
-    bot.telegram.kickChatMember(message[0].chatId, message[0].newChatMemberId, {
-      until_date: 0
-    });
+  try {
+    const message = await Messages.find().where({
+      messageId: message_id,
+    }).sort({createTime: -1}).limit(1)
+    if (message.length>0) {
+      // 踢掉该用户
+      console.log('[ ti chu message ] >', message)
+      bot.telegram.deleteMessage(message[0].chatId, message_id)
+      bot.telegram.kickChatMember(message[0].chatId, message[0].newChatMemberId, {
+        until_date: 0
+      });
+    }
+  } catch (error) {
+    console.log('[ error ] >', error)
   }
 }
 
