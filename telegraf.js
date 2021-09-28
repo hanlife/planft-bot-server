@@ -61,6 +61,17 @@ bot.on('message', async ctx => {
   }
 });
 
+bot.on('chat_member', async ctx => {
+  console.log('[ chat_member ] >', ctx)
+})
+bot.on('new_chat_members', async ctx => {
+  console.log('[ new_chat_members ] >', ctx)
+})
+bot.on('left_chat_member', async ctx => {
+  console.log('[ left_chat_member ] >', ctx)
+})
+
+
 async function checkResult (message_id) {
   try {
     const message = await Messages.find().where({
