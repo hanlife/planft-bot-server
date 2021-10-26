@@ -27,7 +27,7 @@ router.post('/verify', async function (ctx, next) {
       console.log('[ message ] >', message[0].messageId)
       // 删除验证消息
       if(message[0].messageId){
-        await telegram.deleteMessage(groupId, Number(message[0].messageId))
+        // await telegram.deleteMessage(groupId, Number(message[0].messageId))
         await Messages.deleteOne({
           messageId: message[0].messageId
         })
@@ -55,7 +55,7 @@ router.post('/verify', async function (ctx, next) {
       }).sort({createTime: -1}).limit(1)
       // 删除验证消息
       if(message[0].messageId){
-        await telegram.deleteMessage(groupId, Number(message[0].messageId))
+        // await telegram.deleteMessage(groupId, Number(message[0].messageId))
         await Messages.deleteOne({
           messageId: message[0].messageId
         })
@@ -114,7 +114,7 @@ router.post('/verifyFail', async function(ctx,next) {
       telegram.kickChatMember(groupId, userId, {
         until_date: 0
       });
-      await telegram.deleteMessage(groupId, Number(message[0].messageId))
+      // await telegram.deleteMessage(groupId, Number(message[0].messageId))
       await Messages.deleteOne({
         messageId: message[0].messageId
       })

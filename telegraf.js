@@ -80,7 +80,7 @@ async function checkResult (message_id) {
     if (message.length>0) {
       // 踢掉该用户
       console.log('[ ti chu message ] >', message)
-      bot.telegram.deleteMessage(message[0].chatId, message_id)
+      // bot.telegram.deleteMessage(message[0].chatId, message_id)
       bot.telegram.kickChatMember(message[0].chatId, message[0].newChatMemberId, {
         until_date: 0
       });
