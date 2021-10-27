@@ -2,7 +2,9 @@ const { Telegraf } = require('telegraf');
 const bot = new Telegraf(process.env.bot_token);
 const Messages = require('./models/message');
 
-
+bot.on('message', async ctx=>{
+  console.log('message', ctx.message);
+})
 // bot.on('message', async ctx => {
 //   console.log('message', ctx.message);
 //   const new_chat_member = ctx.message.new_chat_member;
