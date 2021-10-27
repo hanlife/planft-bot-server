@@ -8,9 +8,13 @@ const telegram = telegraf.telegram
 
 router.prefix('/users')
 
-router.post('/webHook', async function(ctx){
-  console.log('[ webHook ] >', ctx.request.body)
-  console.log('[ webHook ] >', ctx.request.body.message.new_chat_members)
+router.post('/webHook', async function (ctx) {
+  try {
+    console.log('[ webHook ] >', ctx.request.body.message)
+    await telegraf.handleUpdate(ctx.request.body)
+  } catch (error) {
+    console.log('[ webHook error ] >', error)
+  }
 })
 
 router.post('/verify', async function (ctx, next) {
@@ -28,10 +32,10 @@ router.post('/verify', async function (ctx, next) {
       const message = await Messages.find().where({
         chatId: groupId,
         newChatMemberId: userId
-      }).sort({createTime: -1}).limit(1)
+      }).sort({ createTime: -1 }).limit(1)
       console.log('[ message ] >', message[0].messageId)
       // 删除验证消息
-      if(message[0].messageId){
+      if (message[0].messageId) {
         // await telegram.deleteMessage(groupId, Number(message[0].messageId))
         await Messages.deleteOne({
           messageId: message[0].messageId
@@ -57,16 +61,16 @@ router.post('/verify', async function (ctx, next) {
       const message = await Messages.find().where({
         chatId: groupId,
         newChatMemberId: userId
-      }).sort({createTime: -1}).limit(1)
+      }).sort({ createTime: -1 }).limit(1)
       // 删除验证消息
-      if(message[0].messageId){
+      if (message[0].messageId) {
         // await telegram.deleteMessage(groupId, Number(message[0].messageId))
         await Messages.deleteOne({
           messageId: message[0].messageId
         })
       }
       // 用户不一致
-      if(find_res[0].userId != userId){
+      if (find_res[0].userId != userId) {
         const id = find_res[0]._id
         await Users.findByIdAndUpdate({ _id: id }, {
           userId
@@ -104,17 +108,17 @@ router.post('/verify', async function (ctx, next) {
 })
 
 // 验证未通过
-router.post('/verifyFail', async function(ctx,next) {
+router.post('/verifyFail', async function (ctx, next) {
   try {
     let data = ctx.request.body
     const { userId, groupId } = data
     const message = await Messages.find().where({
       chatId: groupId,
       newChatMemberId: userId
-    }).sort({createTime: -1}).limit(1)
+    }).sort({ createTime: -1 }).limit(1)
     console.log("message", message)
     // 删除验证消息
-    if(message[0].messageId){
+    if (message[0].messageId) {
       // 踢掉之前用户
       telegram.kickChatMember(groupId, userId, {
         until_date: 0
