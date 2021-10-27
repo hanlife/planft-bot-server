@@ -51,14 +51,12 @@ bot.on('message', async ctx => {
 
 // 一分钟检测一次
 let rule = new schedule.RecurrenceRule();
-// rule.second = 0; // 每分钟 0 秒执行
-rule.second = [0, 10, 20, 30, 40, 50]; // 每隔 10 秒执行一次
+rule.second = 0; // 每分钟 0 秒执行
+// rule.second = [0, 10, 20, 30, 40, 50]; // 每隔 10 秒执行一次
 schedule.scheduleJob(rule, async () => {
   const arr = JSON.parse(JSON.stringify(global.checkUser))
-  console.log('[ arr ] >', arr)
   for (let i = 0; i < arr.length; i++) {
     const now = new Date().getTime()
-    console.log('[ 时间检测 ] >', now - arr[i].createTime)
     if (now - arr[i].createTime > (dealTime * 60 * 1000)) {
       await checkResult2(arr[i], i)
     }
