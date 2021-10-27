@@ -15,6 +15,11 @@ router.post('/webHook', async function (ctx) {
   } catch (error) {
     console.log('[ webHook error ] >', error)
   }
+  ctx.body = {
+    code: 0,
+    data: null,
+    message: 'success',
+  }
 })
 
 router.post('/verify', async function (ctx, next) {
