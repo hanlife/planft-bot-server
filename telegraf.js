@@ -3,7 +3,7 @@ const bot = new Telegraf(process.env.bot_token);
 const Messages = require('./models/message');
 const schedule = require('node-schedule');
 
-const dealTime = 1
+const dealTime = 3
 bot.on('message', async ctx => {
   console.log('message', ctx.message);
   const new_chat_member = ctx.message.new_chat_member;
@@ -23,9 +23,11 @@ bot.on('message', async ctx => {
       can_pin_messages: false
     });
 
-    const username = `${new_chat_member.first_name} ${new_chat_member.last_name}`
+    const first_name = new_chat_member.first_name || ''
+    const last_name = new_chat_member.last_name || ''
+    const username = `${first_name} ${last_name}`
     const res = await ctx.replyWithHTML(
-      `<a href="${process.env.auth_host}/#/verify?groupId=${chat.id}&userId=${new_chat_member.id
+      `<a href="${process.env.auth_host}#/verify?groupId=${chat.id}&userId=${new_chat_member.id
       }">Welcome ${username}, Please click NFT Authentication</a>`
     );
 
@@ -37,36 +39,13 @@ bot.on('message', async ctx => {
       messageId: message_id,
       createTime: new Date()
     })
-
-    // setTimeout(() => {
-    //   checkResult(message_id)
-    // }, 6 * 60 * 1000)
+    // 放入检测数组
     global.checkUser.push({
       createTime: new Date().getTime(),
       chatId: chat.id,
       newChatMemberId: new_chat_member.id,
       messageId: message_id,
     })
-    // setTimeout(() => {
-    //   const checkResult = true;
-    //   if (checkResult) {
-    //     ctx.telegram.deleteMessage(chat.id, message_id); // 删除验证记录
-    //     ctx.telegram.restrictChatMember(chat.id, new_chat_member.id, {
-    //       can_send_messages: true,
-    //       can_send_media_messages: true,
-    //       can_send_polls: true,
-    //       can_send_other_messages: true,
-    //       can_add_web_page_previews: true,
-    //       can_change_info: true,
-    //       can_invite_users: true,
-    //       can_pin_messages: true
-    //     });
-    //   } else {
-    //     ctx.telegram.kickChatMember(chat.id, new_chat_member.id, {
-    //       until_date: 0
-    //     });
-    //   }
-    // }, 30 * 1000);
   }
 });
 
