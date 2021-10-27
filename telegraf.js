@@ -93,8 +93,8 @@ async function checkResult (message_id) {
 bot.launch().then(() => {
   console.info(`Bot ${bot.botInfo.username} is up and running`);
 });
-console.log('[ setWebhook ] >', `${process.env.auth_host}users/webHook`)
-bot.telegram.setWebhook(`${process.env.auth_host}users/webHook`)
+console.log('[ setWebhook ] >', `${process.env.auth_host}api/users/webHook`)
+bot.telegram.setWebhook(`${process.env.auth_host}api/users/webHook`)
 
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
