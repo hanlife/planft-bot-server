@@ -73,12 +73,12 @@ setTimeout(async () => {
   const arr = JSON.parse(JSON.stringify(global.checkUser))
   for (let i = 0; i < arr.length; i++) {
     const now = new Date().getTime()
-    console.log('[  ] >', now - arr[i].createTime)
+    console.log('[ 时间检测 ] >', now - arr[i].createTime)
     if (now - arr[i].createTime > (dealTime * 60 * 1000)) {
       await checkResult2(arr[i], i)
     }
   }
-}, 1 * 60 * 6000)
+}, 1 * 10 * 1000)
 
 bot.on('chat_member', async ctx => {
   console.log('[ chat_member ] >', ctx)
@@ -92,6 +92,7 @@ bot.on('left_chat_member', async ctx => {
 
 async function checkResult2 (data, i) {
   try {
+    console.log('[ checkResult2 ] >', data, i)
     await bot.telegram.deleteMessage(data.chatId, data.messageId)
     await bot.telegram.kickChatMember(data.chatId, data.newChatMemberId, {
       until_date: 0

@@ -30,6 +30,7 @@ router.post('/verify', async function (ctx, next) {
   for(let i=0; i<global.checkUser.length; i++){
     const { chatId, newChatMemberId } = global.checkUser[i]
     if(chatId === groupId && newChatMemberId === userId) {
+      console.log('[ 验证踢人通过 ] >')
       global.checkUser.splice(i, 1)
     }
   }
@@ -90,7 +91,7 @@ router.post('/verify', async function (ctx, next) {
           userId
         })
         // 踢掉之前用户
-        telegram.kickChatMember(groupId, find_res[0].userId, {
+        await telegram.kickChatMember(groupId, find_res[0].userId, {
           until_date: 0
         });
         await telegram.unbanChatMember(groupId, find_res[0].userId)
