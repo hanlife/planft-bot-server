@@ -10,6 +10,7 @@ router.prefix('/users')
 
 router.post('/webHook', async function(ctx){
   console.log('[ webHook ] >', ctx.request.body)
+  console.log('[ webHook ] >', ctx.request.body.message.new_chat_members)
 })
 
 router.post('/verify', async function (ctx, next) {
