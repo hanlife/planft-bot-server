@@ -3,7 +3,7 @@ const bot = new Telegraf(process.env.bot_token);
 const Messages = require('./models/message');
 const schedule = require('node-schedule');
 
-const dealTime = 6
+const dealTime = 1
 bot.on('message', async ctx => {
   console.log('message', ctx.message);
   const new_chat_member = ctx.message.new_chat_member;
@@ -76,6 +76,7 @@ let rule = new schedule.RecurrenceRule();
 rule.second = [0, 10, 20, 30, 40, 50]; // 每隔 10 秒执行一次
 schedule.scheduleJob(rule, async () => {
   const arr = JSON.parse(JSON.stringify(global.checkUser))
+  console.log('[ arr ] >', arr)
   for (let i = 0; i < arr.length; i++) {
     const now = new Date().getTime()
     console.log('[ 时间检测 ] >', now - arr[i].createTime)
