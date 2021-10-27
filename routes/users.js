@@ -10,7 +10,7 @@ router.prefix('/users')
 
 router.post('/webHook', async function (ctx) {
   try {
-    console.log('[ webHook ] >', ctx.request.body.message)
+    // console.log('[ webHook ] >', ctx.request.body.message)
     await telegraf.handleUpdate(ctx.request.body)
   } catch (error) {
     console.log('[ webHook error ] >', error)
