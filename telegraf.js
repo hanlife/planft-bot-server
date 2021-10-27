@@ -2,7 +2,7 @@ const { Telegraf } = require('telegraf');
 const bot = new Telegraf(process.env.bot_token);
 const Messages = require('./models/message');
 
-
+const dealTime = 6
 bot.on('message', async ctx => {
   console.log('message', ctx.message);
   const new_chat_member = ctx.message.new_chat_member;
@@ -36,9 +36,15 @@ bot.on('message', async ctx => {
       createTime: new Date()
     })
 
-    setTimeout(() => {
-      checkResult(message_id)
-    }, 6 * 60 * 1000)
+    // setTimeout(() => {
+    //   checkResult(message_id)
+    // }, 6 * 60 * 1000)
+    global.checkUser.push({
+      createTime: new Date().getTime(),
+      chatId: chat.id,
+      newChatMemberId: new_chat_member.id,
+      messageId: message_id,
+    })
     // setTimeout(() => {
     //   const checkResult = true;
     //   if (checkResult) {
@@ -62,6 +68,18 @@ bot.on('message', async ctx => {
   }
 });
 
+// 一分钟检测一次
+setTimeout(async () => {
+  const arr = JSON.parse(JSON.stringify(global.checkUser))
+  for (let i = 0; i < arr.length; i++) {
+    const now = new Date().getTime()
+    console.log('[  ] >', now - arr[i].createTime)
+    if (now - arr[i].createTime > (dealTime * 60 * 1000)) {
+      await checkResult2(arr[i], i)
+    }
+  }
+}, 1 * 60 * 6000)
+
 bot.on('chat_member', async ctx => {
   console.log('[ chat_member ] >', ctx)
 })
@@ -72,6 +90,18 @@ bot.on('left_chat_member', async ctx => {
   console.log('[ left_chat_member ] >', ctx)
 })
 
+async function checkResult2 (data, i) {
+  try {
+    await bot.telegram.deleteMessage(data.chatId, data.messageId)
+    await bot.telegram.kickChatMember(data.chatId, data.newChatMemberId, {
+      until_date: 0
+    });
+    await bot.telegram.unbanChatMember(data.chatId, data.newChatMemberId)
+  } catch (error) {
+    console.log('[ error ] >', error)
+  }
+  global.checkUser.splice(i, 1)
+}
 
 async function checkResult (message_id) {
   try {

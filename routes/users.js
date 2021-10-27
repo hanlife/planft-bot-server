@@ -25,6 +25,15 @@ router.post('/webHook', async function (ctx) {
 router.post('/verify', async function (ctx, next) {
   let data = ctx.request.body
   const { userId, groupId, contract, tokenId } = data
+  
+  // 删除已验证用户
+  for(let i=0; i<global.checkUser.length; i++){
+    const { chatId, newChatMemberId } = global.checkUser[i]
+    if(chatId === groupId && newChatMemberId === userId) {
+      global.checkUser.splice(i, 1)
+    }
+  }
+
   try {
     const find_res = await Users.find().where({
       groupId, tokenId
@@ -41,7 +50,7 @@ router.post('/verify', async function (ctx, next) {
       console.log('[ message ] >', message[0].messageId)
       // 删除验证消息
       if (message[0].messageId) {
-        // await telegram.deleteMessage(groupId, Number(message[0].messageId))
+        await telegram.deleteMessage(groupId, Number(message[0].messageId))
         await Messages.deleteOne({
           messageId: message[0].messageId
         })
@@ -69,7 +78,7 @@ router.post('/verify', async function (ctx, next) {
       }).sort({ createTime: -1 }).limit(1)
       // 删除验证消息
       if (message[0].messageId) {
-        // await telegram.deleteMessage(groupId, Number(message[0].messageId))
+        await telegram.deleteMessage(groupId, Number(message[0].messageId))
         await Messages.deleteOne({
           messageId: message[0].messageId
         })
@@ -84,6 +93,7 @@ router.post('/verify', async function (ctx, next) {
         telegram.kickChatMember(groupId, find_res[0].userId, {
           until_date: 0
         });
+        await telegram.unbanChatMember(groupId, find_res[0].userId)
       }
 
       // 解禁当前用户
@@ -117,6 +127,14 @@ router.post('/verifyFail', async function (ctx, next) {
   try {
     let data = ctx.request.body
     const { userId, groupId } = data
+    // 删除已验证用户
+    for(let i=0; i<global.checkUser.length; i++){
+      const { chatId, newChatMemberId } = global.checkUser[i]
+      if(chatId === groupId && newChatMemberId === userId) {
+        global.checkUser.splice(i, 1)
+      }
+    }
+
     const message = await Messages.find().where({
       chatId: groupId,
       newChatMemberId: userId
@@ -128,7 +146,8 @@ router.post('/verifyFail', async function (ctx, next) {
       telegram.kickChatMember(groupId, userId, {
         until_date: 0
       });
-      // await telegram.deleteMessage(groupId, Number(message[0].messageId))
+      await telegram.unbanChatMember(groupId, userId)
+      await telegram.deleteMessage(groupId, Number(message[0].messageId))
       await Messages.deleteOne({
         messageId: message[0].messageId
       })
