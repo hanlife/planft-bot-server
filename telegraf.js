@@ -1,6 +1,7 @@
 const { Telegraf } = require('telegraf');
 const bot = new Telegraf(process.env.bot_token);
 const Messages = require('./models/message');
+const schedule = require('node-schedule');
 
 const dealTime = 6
 bot.on('message', async ctx => {
@@ -22,9 +23,10 @@ bot.on('message', async ctx => {
       can_pin_messages: false
     });
 
+    const username = `${new_chat_member.first_name} ${new_chat_member.last_name}`
     const res = await ctx.replyWithHTML(
       `<a href="${process.env.auth_host}/#/verify?groupId=${chat.id}&userId=${new_chat_member.id
-      }">NFT Authentication</a>`
+      }">Welcome ${username}, Please click NFT Authentication</a>`
     );
 
     const message_id = res.message_id;
@@ -69,7 +71,10 @@ bot.on('message', async ctx => {
 });
 
 // 一分钟检测一次
-setTimeout(async () => {
+let rule = new schedule.RecurrenceRule();
+// rule.second = 0; // 每分钟 0 秒执行
+rule.second = [0, 10, 20, 30, 40, 50]; // 每隔 10 秒执行一次
+schedule.scheduleJob(rule, () => {
   const arr = JSON.parse(JSON.stringify(global.checkUser))
   for (let i = 0; i < arr.length; i++) {
     const now = new Date().getTime()
@@ -78,7 +83,7 @@ setTimeout(async () => {
       await checkResult2(arr[i], i)
     }
   }
-}, 1 * 10 * 1000)
+});
 
 bot.on('chat_member', async ctx => {
   console.log('[ chat_member ] >', ctx)
