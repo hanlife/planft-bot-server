@@ -8,6 +8,10 @@ const telegram = telegraf.telegram
 
 router.prefix('/users')
 
+router.post('/webHook', async function(ctx){
+  console.log('[ webHook ] >', ctx.request.body)
+})
+
 router.post('/verify', async function (ctx, next) {
   let data = ctx.request.body
   const { userId, groupId, contract, tokenId } = data

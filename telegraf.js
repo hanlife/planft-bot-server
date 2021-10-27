@@ -94,6 +94,8 @@ bot.launch().then(() => {
   console.info(`Bot ${bot.botInfo.username} is up and running`);
 });
 
+bot.telegram.setWebhook(`${process.env.auth_host}/users/webHook`)
+
 // Enable graceful stop
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
