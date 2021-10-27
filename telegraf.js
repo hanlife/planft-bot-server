@@ -96,6 +96,7 @@ bot.on('left_chat_member', async ctx => {
 })
 
 async function checkResult2 (data, i) {
+  global.checkUser.splice(i, 1)
   try {
     console.log('[ checkResult2 ] >', data, i)
     await bot.telegram.deleteMessage(data.chatId, data.messageId)
@@ -106,7 +107,6 @@ async function checkResult2 (data, i) {
   } catch (error) {
     console.log('[ error ] >', error)
   }
-  global.checkUser.splice(i, 1)
 }
 
 async function checkResult (message_id) {
