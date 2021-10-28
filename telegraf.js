@@ -3,7 +3,7 @@ const bot = new Telegraf(process.env.bot_token);
 const Messages = require('./models/message');
 const schedule = require('node-schedule');
 
-const dealTime = 3
+const dealTime = 2
 bot.on('message', async ctx => {
   console.log('message', ctx.message);
   const new_chat_member = ctx.message.new_chat_member;
