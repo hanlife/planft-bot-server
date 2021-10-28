@@ -29,7 +29,7 @@ router.post('/verify', async function (ctx, next) {
   // 删除已验证用户
   for(let i=0; i<global.checkUser.length; i++){
     const { chatId, newChatMemberId } = global.checkUser[i]
-    if(chatId === groupId && newChatMemberId === userId) {
+    if(chatId == groupId && newChatMemberId == userId) {
       console.log('[ 验证踢人通过 ] >')
       global.checkUser.splice(i, 1)
     }
@@ -39,7 +39,6 @@ router.post('/verify', async function (ctx, next) {
     const find_res = await Users.find().where({
       groupId, tokenId
     });
-    console.log("find_res.length", find_res.length)
     if (find_res.length === 0) {
       await Users.create({
         userId, groupId, contract, tokenId
@@ -48,7 +47,6 @@ router.post('/verify', async function (ctx, next) {
         chatId: groupId,
         newChatMemberId: userId
       }).sort({ createTime: -1 }).limit(1)
-      console.log('[ message ] >', message[0].messageId)
       // 删除验证消息
       if (message[0].messageId) {
         await telegram.deleteMessage(groupId, Number(message[0].messageId))
@@ -131,7 +129,8 @@ router.post('/verifyFail', async function (ctx, next) {
     // 删除已验证用户
     for(let i=0; i<global.checkUser.length; i++){
       const { chatId, newChatMemberId } = global.checkUser[i]
-      if(chatId === groupId && newChatMemberId === userId) {
+      if(chatId == groupId && newChatMemberId == userId) {
+        console.log('[ 验证未通过踢人通过 ] >')
         global.checkUser.splice(i, 1)
       }
     }
@@ -140,7 +139,6 @@ router.post('/verifyFail', async function (ctx, next) {
       chatId: groupId,
       newChatMemberId: userId
     }).sort({ createTime: -1 }).limit(1)
-    console.log("message", message)
     // 删除验证消息
     if (message[0].messageId) {
       // 踢掉之前用户
