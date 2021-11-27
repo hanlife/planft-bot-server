@@ -27,7 +27,7 @@ bot.on('message', async ctx => {
     const last_name = new_chat_member.last_name || ''
     const username = `${first_name} ${last_name}`
     const res = await ctx.replyWithHTML(
-      `<a href="${process.env.auth_host}#/verify?groupId=${chat.id}&userId=${new_chat_member.id
+      `<a href="${process.env.auth_host}verify?groupId=${chat.id}&userId=${new_chat_member.id
       }">Welcome ${username}, Please click NFT Authentication</a>`
     );
 
